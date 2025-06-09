@@ -20,10 +20,18 @@ function App() {
     })
   }
 
+  const getDaysInMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+  }
+
   const monthNames = [
     "ENE", "FEB", "MAR", "ABR", "MAY", "JUN",
     "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"
   ]
+
+  // Generate array of days for the current month
+  const daysInMonth = getDaysInMonth(currentDate)
+  const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
   return (
     <div style={{
@@ -42,7 +50,7 @@ function App() {
       </div>
 
       {/* Tarjeta de anuncios */}
-      <div className="w-96 h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
+      <div className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
         <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-3xl font-bold">Para hoy...</div>
         <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-2xl font-bold leading-none">No hay tareas pendientes</div>
         <img className="w-48 h-48 -left-7 -top-7 absolute" src="/src/assets/bombillo.svg" />
@@ -73,27 +81,24 @@ function App() {
       </div>
 
       {/* Dias del Mes */}
-      <div className="w-[93%] h-125 left-1/2 transform -translate-x-1/2 top-108 absolute">
-        {/* Dia 1 */}
-        <div className="w-full h-28 left-0 top-0 absolute bg-blue-600 rounded-3xl overflow-hidden flex items-center">
-          <div className="w-20 h-14 left-1 absolute text-center justify-start text-white text-6xl font-bold">01</div>
-          <div className="w-64 h-20 left-23 absolute flex items-center text-white text-3xl font-bold">Ver 3 tareas</div>
-        </div>
-        {/* Dia 2 */}
-        <div className="w-full h-28 left-0 top-32 absolute bg-white rounded-3xl overflow-hidden flex items-center">
-          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">02</div>
-          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
-        </div>
-        {/* Dia 3 */}
-        <div className="w-full h-28 left-0 top-64 absolute bg-white rounded-3xl overflow-hidden flex items-center">
-          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">03</div>
-          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
-        </div>
-        {/* Dia 4 */}
-        <div className="w-full h-28 left-0 top-96 absolute bg-white rounded-3xl overflow-hidden flex items-center">
-          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">04</div>
-          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
-        </div>
+      <div className="w-[93%] h-[calc(100vh-500px)] left-1/2 transform -translate-x-1/2 top-108 absolute overflow-y-auto">
+        {daysArray.map((day, index) => (
+          <div key={day}>
+            <div 
+              className={`w-full h-28 ${index === 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center`}
+            >
+              <div className={`w-20 h-14 left-1 absolute text-center justify-start ${index === 0 ? 'text-white' : 'text-blue-900'} text-6xl font-bold`}>
+                {day.toString().padStart(2, '0')}
+              </div>
+              <div className={`w-64 h-20 left-23 absolute flex items-center ${index === 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
+                {index === 0 ? 'Ver 3 tareas' : 'No hay tareas pendientes'}
+              </div>
+            </div>
+            {index < daysArray.length - 1 && (
+              <div className="h-3"></div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Agregar Tarea */}
