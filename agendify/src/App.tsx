@@ -21,8 +21,8 @@ function App() {
   }
 
   const monthNames = [
-    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
-    "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
+    "ENE", "FEB", "MAR", "ABR", "MAY", "JUN",
+    "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"
   ]
 
   return (
@@ -44,14 +44,14 @@ function App() {
       {/* Tarjeta de anuncios */}
       <div className="w-96 h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
         <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-3xl font-bold">Para hoy...</div>
-        <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-2xl font-bold leading-tight">No hay tareas pendientes</div>
+        <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-2xl font-bold leading-none">No hay tareas pendientes</div>
         <img className="w-48 h-48 -left-7 -top-7 absolute" src="/src/assets/bombillo.svg" />
       </div>
 
       {/* Fecha */}
       <div className="w-80 h-16 left-1/2 transform -translate-x-1/2 top-66 absolute">
-        <div className="w-24 h-8 left-30 top-0 absolute text-center justify-start text-blue-900 text-4xl font-bold">{currentDate.getFullYear()}</div>
-        <div className="w-52 h-8 left-14 top-8 absolute text-center justify-start text-blue-900 text-6xl font-bold">{monthNames[currentDate.getMonth()]}</div>
+        <div className="w-24 h-8 left-1/2 transform -translate-x-1/2 top-0 absolute text-center justify-start text-blue-900 text-4xl font-bold font-['League_Spartan']">{currentDate.getFullYear()}</div>
+        <div className="w-52 h-8 left-1/2 transform -translate-x-1/2 top-8 absolute text-center justify-start text-blue-900 text-7xl font-bold font-['League_Spartan']">{monthNames[currentDate.getMonth()]}</div>
         <img 
           src="/src/assets/flecha.svg" 
           alt='flecha izquierda' 
@@ -66,8 +66,43 @@ function App() {
         />
       </div>
 
+      {/* Tareas Finalizadas */}
+      <div className="w-44 h-12 left-8 top-89 absolute">
+        <div className="w-28 h-6 left-14 top-3 absolute justify-center text-blue-600 text-2xl leading-none font-bold">Ver tareas finalizadas</div>
+        <img src="/src/assets/paloma.svg" alt="paloma" className="w-12 h-12 -left-2 top-2 absolute" />
+      </div>
+
+      {/* Dias del Mes */}
+      <div className="w-[93%] h-125 left-1/2 transform -translate-x-1/2 top-108 absolute">
+        {/* Dia 1 */}
+        <div className="w-full h-28 left-0 top-0 absolute bg-blue-600 rounded-3xl overflow-hidden flex items-center">
+          <div className="w-20 h-14 left-1 absolute text-center justify-start text-white text-6xl font-bold">01</div>
+          <div className="w-64 h-20 left-23 absolute flex items-center text-white text-3xl font-bold">Ver 3 tareas</div>
+        </div>
+        {/* Dia 2 */}
+        <div className="w-full h-28 left-0 top-32 absolute bg-white rounded-3xl overflow-hidden flex items-center">
+          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">02</div>
+          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
+        </div>
+        {/* Dia 3 */}
+        <div className="w-full h-28 left-0 top-64 absolute bg-white rounded-3xl overflow-hidden flex items-center">
+          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">03</div>
+          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
+        </div>
+        {/* Dia 4 */}
+        <div className="w-full h-28 left-0 top-96 absolute bg-white rounded-3xl overflow-hidden flex items-center">
+          <div className="w-20 h-14 left-1 absolute text-center justify-start text-blue-900 text-6xl font-bold">04</div>
+          <div className="w-64 h-20 left-23 absolute flex items-center text-zinc-500 text-3xl font-bold">No hay tareas pendientes</div>
+        </div>
+      </div>
+
+      {/* Agregar Tarea */}
+      <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
+        <img src="/src/assets/agregar.svg" alt="agregar tarea" className="w-24 h-24 left-0 top-0 absolute"/>
+      </div>
+
       {/* Footer */}
-      <div className="w-full h-14 bg-blue-700 flex px-4 fixed bottom-0">
+      <div className="w-full h-14 bg-blue-700 flex px-4 fixed -bottom-1 z-10">
       </div>
     </div>
   )
