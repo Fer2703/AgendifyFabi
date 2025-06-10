@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import '/src/css/App.css'
+import { useNavigate } from 'react-router-dom'
 
 function App() {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date())
 
   const handlePreviousMonth = () => {
@@ -103,7 +105,12 @@ function App() {
 
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
-        <img src="/src/assets/agregar.svg" alt="agregar tarea" className="w-24 h-24 left-0 top-0 absolute"/>
+        <img 
+          src="/src/assets/agregar.svg" 
+          alt="agregar tarea" 
+          className="w-24 h-24 left-0 top-0 absolute cursor-pointer"
+          onClick={() => navigate('/agregar')}
+        />
       </div>
 
       {/* Footer */}
