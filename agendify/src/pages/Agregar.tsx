@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function Agregar() {
-  const navigate = useNavigate();
   const [titulo, setTitulo] = useState('');
   const [detalles, setDetalles] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
@@ -28,30 +26,16 @@ function Agregar() {
 
   return (
     <div style={{
-      backgroundColor: '#97CDFF',
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       margin: 0,
       padding: 0,
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'auto'
+      overflow: 'auto',
+      position: 'relative',
+      background: 'transparent'
     }}>
-        {/* Header con menú */}
-        <div className="w-full h-24 top-0 absolute z-10">
-            <div className="w-full h-14 bg-blue-600 flex items-center px-4 fixed top-0">
-                <img 
-                  src="/src/assets/flecha.svg" 
-                  alt="Retorno" 
-                  className="w-12 h-12 left-2 relative invert brightness-0 rotate-180 cursor-pointer" 
-                  onClick={() => navigate(-1)}
-                />
-            </div>
-            <div className="w-72 h-16 left-1/2 transform -translate-x-1/2 top-10 absolute bg-blue-600 rounded-2xl">
-                <div className="w-60 h-8 left-5 top-5 absolute text-center justify-start text-white text-3xl font-bold">AÑADIR TAREA</div>
-            </div>
-        </div>
-
         {/* Nombre Tarea */}
         <div className="w-[95%] h-24 left-1/2 transform -translate-x-1/2 top-34 absolute">
             <div className="w-60 h-10 left-2 top-0 absolute justify-start text-blue-900 text-3xl font-bold">Título de la tarea</div>
@@ -75,8 +59,12 @@ function Agregar() {
                     value={detalles}
                     onChange={(e) => setDetalles(e.target.value)}
                     placeholder="Escribe aquí"
+                    maxLength={200}
                     className="w-full h-full !p-5 text-zinc-500 text-3xl font-bold bg-transparent border-none outline-none"
                 />
+                <div className="absolute bottom-2 right-4 text-zinc-400 text-base font-bold select-none">
+                    {detalles.length} / 200
+                </div>
             </div>
         </div>
 
@@ -111,10 +99,6 @@ function Agregar() {
         {/* Guardar */}
         <div className="w-72 h-16 left-1/2 transform -translate-x-1/2 top-186 absolute bg-blue-600 rounded-2xl">
             <div className="w-60 h-8 left-5 top-1/2 transform -translate-y-1/2 absolute text-center justify-start text-white text-3xl font-bold">GUARDAR</div>
-        </div>
-
-        {/* Footer */}
-        <div className="w-full h-14 bg-blue-700 flex px-4 fixed -bottom-1 z-10">
         </div>
     </div>
   );

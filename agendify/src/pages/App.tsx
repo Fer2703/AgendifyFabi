@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import '/src/css/App.css'
 
 function App() {
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [isFading, setIsFading] = useState(false);
 
   const handlePreviousMonth = () => {
     setCurrentDate(prevDate => {
@@ -37,20 +39,16 @@ function App() {
 
   return (
     <div style={{
-      backgroundColor: '#97CDFF',
-      width: '100vw',
-      height: '100vh',
+      width: '100%',
+      height: '100%',
       margin: 0,
       padding: 0,
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'auto'
+      overflow: 'auto',
+      position: 'relative',
+      background: 'transparent'
     }}>
-      {/* Header con menú */}
-      <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0 z-10">
-        <img src="/src/assets/menu.svg" alt="Menu" className="w-12 h-12 left-2 relative" />
-      </div>
-
       {/* Tarjeta de anuncios */}
       <div className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
         <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-3xl font-bold">Para hoy...</div>
@@ -105,16 +103,19 @@ function App() {
 
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
-        <img 
-          src="/src/assets/agregar.svg" 
-          alt="agregar tarea" 
+        <motion.img
+          src="/src/assets/agregar.svg"
+          alt="agregar tarea"
           className="w-24 h-24 left-0 top-0 absolute cursor-pointer"
-          onClick={() => navigate('/agregar')}
+          whileTap={{ scale: 1.25, rotate: 15 }}
+          whileHover={{ scale: 1.1 }}
+          animate={{ opacity: isFading ? 0 : 1 }}
+          transition={{ type: 'spring', stiffness: 300, opacity: { duration: 0.5 } }}
+          onTap={() => {
+            setIsFading(true);
+            setTimeout(() => navigate('/agregar'), 500);
+          }}
         />
-      </div>
-
-      {/* Footer */}
-      <div className="w-full h-14 bg-blue-700 flex px-4 fixed -bottom-1 z-10">
       </div>
     </div>
   )
