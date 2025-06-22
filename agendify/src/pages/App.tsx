@@ -7,8 +7,10 @@ function App() {
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date())
   const [isFading, setIsFading] = useState(false);
+  const [slideDirection, setSlideDirection] = useState(0);
 
   const handlePreviousMonth = () => {
+    setSlideDirection(-1);
     setCurrentDate(prevDate => {
       const newDate = new Date(prevDate)
       newDate.setMonth(prevDate.getMonth() - 1)
@@ -17,6 +19,7 @@ function App() {
   }
 
   const handleNextMonth = () => {
+    setSlideDirection(1);
     setCurrentDate(prevDate => {
       const newDate = new Date(prevDate)
       newDate.setMonth(prevDate.getMonth() + 1)
@@ -38,17 +41,7 @@ function App() {
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      margin: 0,
-      padding: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'auto',
-      position: 'relative',
-      background: 'transparent'
-    }}>
+    <div>
       {/* Tarjeta de anuncios */}
       <div className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
         <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-3xl font-bold">Para hoy...</div>
@@ -58,19 +51,41 @@ function App() {
 
       {/* Fecha */}
       <div className="w-80 h-16 left-1/2 transform -translate-x-1/2 top-66 absolute">
-        <div className="w-24 h-8 left-1/2 transform -translate-x-1/2 top-0 absolute text-center justify-start text-blue-900 text-4xl font-bold font-['League_Spartan']">{currentDate.getFullYear()}</div>
-        <div className="w-52 h-8 left-1/2 transform -translate-x-1/2 top-8 absolute text-center justify-start text-blue-900 text-7xl font-bold font-['League_Spartan']">{monthNames[currentDate.getMonth()]}</div>
-        <img 
+        <motion.div 
+          className="w-24 h-8 left-1/2 transform -translate-x-1/2 top-0 absolute text-center justify-start text-blue-900 text-4xl font-bold font-['League_Spartan']"
+          key={currentDate.getFullYear()}
+          initial={{ x: slideDirection * 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -slideDirection * 100, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
+          {currentDate.getFullYear()}
+        </motion.div>
+        <motion.div 
+          className="w-52 h-8 left-1/2 transform -translate-x-1/2 top-8 absolute text-center justify-start text-blue-900 text-7xl font-bold font-['League_Spartan']"
+          key={currentDate.getMonth()}
+          initial={{ x: slideDirection * 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -slideDirection * 100, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        >
+          {monthNames[currentDate.getMonth()]}
+        </motion.div>
+        <motion.img 
           src="/src/assets/flecha.svg" 
           alt='flecha izquierda' 
           className="w-14 h-14 left-0 top-3 absolute rotate-180 cursor-pointer" 
           onClick={handlePreviousMonth}
+          whileTap={{ scale: 1.25, rotate: -15 }}
+          whileHover={{ scale: 1.1 }}
         />
-        <img 
+        <motion.img 
           src="/src/assets/flecha.svg" 
           alt='flecha derecha' 
           className="w-14 h-14 left-68 top-3 absolute cursor-pointer" 
           onClick={handleNextMonth}
+          whileTap={{ scale: 1.25, rotate: 15 }}
+          whileHover={{ scale: 1.1 }}
         />
       </div>
 
@@ -84,8 +99,11 @@ function App() {
       <div className="w-[93%] h-[calc(100vh-500px)] left-1/2 transform -translate-x-1/2 top-108 absolute overflow-y-auto">
         {daysArray.map((day, index) => (
           <div key={day}>
-            <div 
-              className={`w-full h-28 ${index === 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center`}
+            <motion.div 
+              className={`w-full h-28 ${index === 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center cursor-pointer`}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              onClick={() => navigate('/diatareas')}
             >
               <div className={`w-20 h-14 left-1 absolute text-center justify-start ${index === 0 ? 'text-white' : 'text-blue-900'} text-6xl font-bold`}>
                 {day.toString().padStart(2, '0')}
@@ -93,7 +111,7 @@ function App() {
               <div className={`w-64 h-20 left-23 absolute flex items-center ${index === 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
                 {index === 0 ? 'Ver 3 tareas' : 'No hay tareas pendientes'}
               </div>
-            </div>
+            </motion.div>
             {index < daysArray.length - 1 && (
               <div className="h-3"></div>
             )}
