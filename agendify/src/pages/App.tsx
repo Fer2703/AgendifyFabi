@@ -103,7 +103,7 @@ function App() {
               className={`w-full h-28 ${index === 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center cursor-pointer`}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
-              onClick={() => navigate('/diatareas')}
+              onClick={() => navigate(`/diatareas?day=${day}&month=${currentDate.getMonth()}&year=${currentDate.getFullYear()}`)}
             >
               <div className={`w-20 h-14 left-1 absolute text-center justify-start ${index === 0 ? 'text-white' : 'text-blue-900'} text-6xl font-bold`}>
                 {day.toString().padStart(2, '0')}

@@ -8,11 +8,16 @@ function Agregar() {
 
   const handleFechaInicioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nuevaFechaInicio = e.target.value;
-    setFechaInicio(nuevaFechaInicio);
+    const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
     
-    // Si la fecha de fin es anterior a la nueva fecha de inicio, actualizarla
-    if (fechaFin && nuevaFechaInicio > fechaFin) {
-      setFechaFin(nuevaFechaInicio);
+    // Solo permitir fechas de hoy en adelante
+    if (nuevaFechaInicio >= today) {
+      setFechaInicio(nuevaFechaInicio);
+      
+      // Si la fecha de fin es anterior a la nueva fecha de inicio, actualizarla
+      if (fechaFin && nuevaFechaInicio > fechaFin) {
+        setFechaFin(nuevaFechaInicio);
+      }
     }
   };
 
@@ -79,6 +84,7 @@ function Agregar() {
                     type="date"
                     value={fechaInicio}
                     onChange={handleFechaInicioChange}
+                    min={new Date().toISOString().split('T')[0]}
                     className="w-40 h-24 left-1/2 transform -translate-x-1/2 top-8 absolute text-center text-zinc-500 text-2xl font-bold bg-transparent border-none outline-none"
                 />
             </div>

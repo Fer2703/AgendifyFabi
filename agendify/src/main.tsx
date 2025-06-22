@@ -6,7 +6,7 @@ import './index.css'
 import App from './pages/App.tsx'
 import Agregar from './pages/Agregar.tsx'
 import DiaTareas from './pages/DiaTareas.tsx'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 // Header
 function Header() {
@@ -252,13 +252,46 @@ function AnimatedRoutes() {
   );
 }
 
+function LoadingScreen() {
+  return (
+    <div
+      className="w-full h-full flex flex-col items-center justify-center"
+      style={{ background: "linear-gradient(1deg, #97CDFF -22.66%, #2258E2 41.7%)" }}
+    >
+      <motion.img
+        src="/src/assets/logo.svg"
+        alt="Agendify Logo"
+        className="w-80 h-56 transform left-1/2 -translate-x-1/2 top-[33%] absolute"
+        initial={{ scale: 0.8, opacity: 0.8 }}
+        animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
+        transition={{ duration: 1.2, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' }}
+      />
+    </div>
+  );
+}
+
+function MainApp() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <LoadingScreen />;
+
+  return (
+    <StrictMode>
+      <BrowserRouter>
+        <Layout>
+          <AnimatedRoutes />
+        </Layout>
+      </BrowserRouter>
+    </StrictMode>
+  );
+}
+
 // Renderizado principal
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Layout>
-        <AnimatedRoutes />
-      </Layout>
-    </BrowserRouter>
-  </StrictMode>,
+  <MainApp />
 )
