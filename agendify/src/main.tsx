@@ -154,6 +154,10 @@ function AgregarHeader() {
 function DiaTareasHeader() {
   const navigate = useNavigate();
   const [fadeArrow, setFadeArrow] = React.useState(false);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const month = params.get('month');
+  const year = params.get('year');
 
   const handleBack = () => {
     setTimeout(() => setFadeArrow(true), 100);
@@ -161,7 +165,13 @@ function DiaTareasHeader() {
 
   React.useEffect(() => {
     if (fadeArrow) {
-      const timeout = setTimeout(() => navigate(-1), 500);
+      const timeout = setTimeout(() => {
+        if (month !== null && year !== null) {
+          navigate(`/?month=${month}&year=${year}`);
+        } else {
+          navigate('/');
+        }
+      }, 500);
       return () => clearTimeout(timeout);
     }
   }, [fadeArrow, navigate]);

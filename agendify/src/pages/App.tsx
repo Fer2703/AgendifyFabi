@@ -1,13 +1,46 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import '/src/css/App.css'
+import PalomaIcon from '../assets/PalomaIcon'
+
+// Definir el tipo de tarea
+interface Task {
+  id: number;
+  title: string;
+  details: string;
+  from: string;
+  to: string;
+  completed: boolean;
+}
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentDate, setCurrentDate] = useState(new Date())
   const [isFading, setIsFading] = useState(false);
   const [slideDirection, setSlideDirection] = useState(0);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [showCompleted, setShowCompleted] = useState(false);
+
+  useEffect(() => {
+    // Si hay parámetros month y year en la URL, inicializa el mes y año
+    const params = new URLSearchParams(location.search);
+    const month = params.get('month');
+    const year = params.get('year');
+    if (month !== null && year !== null) {
+      setCurrentDate(prev => {
+        const newDate = new Date(prev);
+        newDate.setMonth(Number(month));
+        newDate.setFullYear(Number(year));
+        return newDate;
+      });
+    }
+    const localTasks = localStorage.getItem('tasks');
+    if (localTasks) {
+      setTasks(JSON.parse(localTasks));
+    }
+  }, [location.search]);
 
   const handlePreviousMonth = () => {
     setSlideDirection(-1);
@@ -40,14 +73,43 @@ function App() {
   const daysInMonth = getDaysInMonth(currentDate)
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
+  // Función para convertir 'DD/MM/YYYY' a Date
+  const parseToDate = (ddmmYYYY: string) => {
+    const [day, month, year] = ddmmYYYY.split('/').map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  // Obtener la fecha de hoy
+  const today = new Date();
+  const todayDay = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
+
+  // Tareas activas para hoy
+  let tareasHoy = tasks.filter(task => {
+    const fromDate = parseToDate(task.from);
+    const toDate = parseToDate(task.to);
+    return fromDate <= today && today <= toDate;
+  });
+  if (showCompleted) {
+    tareasHoy = tareasHoy.filter(task => !task.completed);
+  }
+
   return (
     <div>
       {/* Tarjeta de anuncios */}
-      <div className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden">
-        <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-3xl font-bold">Para hoy...</div>
-        <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-2xl font-bold leading-none">No hay tareas pendientes</div>
+      <motion.div
+        className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden cursor-pointer"
+        whileTap={{ scale: 0.97 }}
+        whileHover={{ scale: 1.02 }}
+        onClick={() => navigate(`/diatareas?day=${todayDay}&month=${todayMonth}&year=${todayYear}`)}
+      >
+        <div className="w-60 h-10 left-33 top-5 absolute justify-start text-blue-900 text-4xl font-bold">Para hoy...</div>
+        <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-3xl font-bold leading-none">
+          {tareasHoy.length > 0 ? `Ver ${tareasHoy.length} tareas` : 'No hay tareas pendientes'}
+        </div>
         <img className="w-48 h-48 -left-7 -top-7 absolute" src="/src/assets/bombillo.svg" />
-      </div>
+      </motion.div>
 
       {/* Fecha */}
       <div className="w-80 h-16 left-1/2 transform -translate-x-1/2 top-66 absolute">
@@ -90,33 +152,51 @@ function App() {
       </div>
 
       {/* Tareas Finalizadas */}
-      <div className="w-44 h-12 left-8 top-89 absolute">
-        <div className="w-28 h-6 left-14 top-3 absolute justify-center text-blue-600 text-2xl leading-none font-bold">Ver tareas finalizadas</div>
-        <img src="/src/assets/paloma.svg" alt="paloma" className="w-12 h-12 -left-2 top-2 absolute" />
+      <div className="w-44 h-12 left-5 top-91 absolute flex items-center cursor-pointer" onClick={() => setShowCompleted(v => !v)}>
+        <div className="flex items-center">
+          <div className="mr-2">
+            <PalomaIcon color={showCompleted ? '#71717a' : '#2258E2'} size={48} />
+          </div>
+          <span className={`text-2xl leading-none left-14 font-bold select-none absolute ${showCompleted ? 'text-zinc-500' : 'text-blue-600'}`}>Ver tareas finalizadas</span>
+        </div>
       </div>
 
       {/* Dias del Mes */}
       <div className="w-[93%] h-[calc(100vh-500px)] left-1/2 transform -translate-x-1/2 top-108 absolute overflow-y-auto">
-        {daysArray.map((day, index) => (
-          <div key={day}>
-            <motion.div 
-              className={`w-full h-28 ${index === 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center cursor-pointer`}
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => navigate(`/diatareas?day=${day}&month=${currentDate.getMonth()}&year=${currentDate.getFullYear()}`)}
-            >
-              <div className={`w-20 h-14 left-1 absolute text-center justify-start ${index === 0 ? 'text-white' : 'text-blue-900'} text-6xl font-bold`}>
-                {day.toString().padStart(2, '0')}
-              </div>
-              <div className={`w-64 h-20 left-23 absolute flex items-center ${index === 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
-                {index === 0 ? 'Ver 3 tareas' : 'No hay tareas pendientes'}
-              </div>
-            </motion.div>
-            {index < daysArray.length - 1 && (
-              <div className="h-3"></div>
-            )}
-          </div>
-        ))}
+        {daysArray.map((day, index) => {
+          // Filtrar tareas para este día
+          let tareasDelDia = tasks.filter(task => {
+            const fromDate = parseToDate(task.from);
+            const toDate = parseToDate(task.to);
+            const thisDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            return fromDate <= thisDay && thisDay <= toDate;
+          });
+          if (showCompleted) {
+            tareasDelDia = tareasDelDia.filter(task => !task.completed);
+          }
+          return (
+            <div key={day}>
+              <motion.div 
+                className={`w-full h-28 ${tareasDelDia.length > 0 ? 'bg-blue-600' : 'bg-white'} rounded-3xl overflow-hidden flex items-center cursor-pointer`}
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                onClick={() => navigate(`/diatareas?day=${day}&month=${currentDate.getMonth()}&year=${currentDate.getFullYear()}`)}
+              >
+                <div className={`w-20 h-14 left-1 absolute text-center justify-start ${tareasDelDia.length > 0 ? 'text-white' : 'text-blue-900'} text-6xl font-bold`}>
+                  {day.toString().padStart(2, '0')}
+                </div>
+                <div className={`w-64 h-20 left-23 absolute flex items-center ${tareasDelDia.length > 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
+                  {tareasDelDia.length > 0
+                    ? `Ver ${tareasDelDia.length} tareas`
+                    : 'No hay tareas pendientes'}
+                </div>
+              </motion.div>
+              {index < daysArray.length - 1 && (
+                <div className="h-3"></div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {/* Agregar Tarea */}
