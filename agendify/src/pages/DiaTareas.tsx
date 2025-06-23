@@ -32,7 +32,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
     if (localTasks) {
       setTasks(JSON.parse(localTasks));
     } else {
-      fetch('/src/data/tasks.json')
+      fetch('/data/tasks.json')
         .then(res => res.json())
         .then((data: Task[]) => {
           setTasks(data);
