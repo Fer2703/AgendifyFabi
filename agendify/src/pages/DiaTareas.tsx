@@ -190,7 +190,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
       </div>
 
       {/* TAREAS */}
-      <div className={`w-[86%] ${isIphoneSE ? 'h-95' : 'h-155'} transform left-1/2 -translate-x-1/2 top-57 absolute overflow-y-auto`}>
+      <div className={`w-[86%] ${isIphoneSE ? 'h-90' : 'h-155'} transform left-1/2 -translate-x-1/2 top-57 absolute overflow-y-auto`}>
         <div className="flex flex-col gap-y-6">
           {/* Para finalizar */}
           {tareasParaFinalizar.length > 0 && (
