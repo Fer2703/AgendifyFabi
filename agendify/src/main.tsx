@@ -338,7 +338,7 @@ function MainApp() {
     <StrictMode>
       <BrowserRouter>
         <Layout>
-          {({ setShowModal, refreshKey, handleDeleteTask }) => (
+          {({ refreshKey, handleDeleteTask }) => (
             <AnimatedRoutes onShowModal={handleDeleteTask} refreshKey={refreshKey} handleDeleteTask={handleDeleteTask} />
           )}
         </Layout>
