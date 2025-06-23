@@ -8,9 +8,23 @@ import Agregar from './pages/Agregar.tsx'
 import DiaTareas from './pages/DiaTareas.tsx'
 import React, { useState, useEffect } from 'react'
 
+// Detecta si el dispositivo es un iPhone SE (ancho <= 375px y alto <= 667px)
+function useIsIphoneSE() {
+  const [isIphoneSE, setIsIphoneSE] = React.useState(() => {
+    return window.innerWidth <= 375 && window.innerHeight <= 667;
+  });
+  React.useEffect(() => {
+    const onResize = () => setIsIphoneSE(window.innerWidth <= 375 && window.innerHeight <= 667);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  return isIphoneSE;
+}
+
 // Header
 function Header() {
   const [showAbout, setShowAbout] = React.useState(false);
+  const isIphoneSE = useIsIphoneSE();
 
   const handleMenuClick = () => {
     setShowAbout(true);
@@ -67,7 +81,9 @@ function Header() {
               }}
             >
               <div className='w-full h-10 top-6 text-center font-bold text-4xl text-blue-900 absolute'>Sobre nosotros</div>
-              <div className='w-[87%] left-1/2 transform -translate-x-1/2 leading-none top-18 text-center font-bold text-2xl text-blue-900 absolute'>Este proyecto surge como una iniciativa escolar para mejorar la planificación diaria y la gestión de tiempo. Diseñamos esta página con el objetivo de facilitar el acceso a información estructurada de manera visual y práctica. <br/><br/>Creado por los estudiantes de la U.E.C.P Internacional "Río Caura" Escobar Bárbara, Henández Miguel, Molina Camila y Pérez Fabiana, esperamos que este sistema ayude a organizar tareas de manera eficiente y adaptada a las necesidades del usuario</div>
+              <div className={`w-[87%] left-1/2 transform -translate-x-1/2 leading-none top-18 text-center font-bold ${isIphoneSE ? 'text-[1.2rem]' : 'text-2xl'} text-blue-900 absolute`}>
+                Este proyecto surge como una iniciativa escolar para mejorar la planificación diaria y la gestión de tiempo. Diseñamos esta página con el objetivo de facilitar el acceso a información estructurada de manera visual y práctica. <br/><br/>Creado por los estudiantes de la U.E.C.P Internacional "Río Caura" Escobar Bárbara, Henández Miguel, Molina Camila y Pérez Fabiana, esperamos que este sistema ayude a organizar tareas de manera eficiente y adaptada a las necesidades del usuario
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -111,11 +127,11 @@ function AgregarHeader() {
     <div className="w-full h-24 top-0 absolute z-20 pointer-events-none">
       
       {/* Barra superior con botón de retroceso */}
-      <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0 pointer-events-auto">
+      <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0 pointer-events-auto z-30">
         <motion.img
           src="/flecha.svg"
           alt="Retorno"
-          className="w-12 h-12 left-2 relative invert brightness-0 rotate-180 cursor-pointer"
+          className="w-12 h-12 left-2 relative invert brightness-0 rotate-180 cursor-pointer z-30"
           whileTap={{ scale: 1.25, rotate: -15 }}
           whileHover={{ scale: 1.1 }}
           animate={{ opacity: fadeArrow ? 0 : 1 }}
@@ -129,7 +145,7 @@ function AgregarHeader() {
         initial={{ y: -60, opacity: 1 }}
         animate={slideOut ? { y: -60 } : { y: 0 }}
         transition={{ duration: 0.35, type: 'spring', stiffness: 200 }}
-        className="w-72 h-28 left-1/2 transform -translate-x-1/2 top-0 absolute bg-blue-700 rounded-2xl pointer-events-auto"
+        className="w-72 h-28 left-1/2 transform -translate-x-1/2 top-0 absolute bg-blue-700 rounded-2xl pointer-events-auto z-10"
         onAnimationComplete={() => {
           if (fadeText && !slideOut) setSlideOut(true);
         }}
