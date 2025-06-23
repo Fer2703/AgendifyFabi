@@ -3,6 +3,16 @@ import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import PalomaIcon from '../assets/PalomaIcon'
 
+// Definir el tipo de tarea
+interface Task {
+  id: number;
+  title: string;
+  details: string;
+  from: string;
+  to: string;
+  completed: boolean;
+}
+
 function DiaTareas() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -12,20 +22,20 @@ function DiaTareas() {
   const [showCompleted, setShowCompleted] = useState(false);
   
   // Estado para manejar el estado de las tareas
-  const [tasks, setTasks] = useState([
-    { id: 1, title: 'Tarea de ejemplo', details: 'Detalles de ejemplo Detalles de ejemplo', from: '25/06', to: '01/07', completed: true },
-    { id: 2, title: 'Tarea de ejemplo', details: 'Detalles de ejemplo Detalles de ejemplo', from: '25/06', to: '01/07', completed: false },
-    { id: 3, title: 'Tarea de ejemplo', details: 'Detalles de ejemplo Detalles de ejemplo', from: '25/06', to: '02/07', completed: false }
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  // Función para convertir 'DD/MM' a Date del año actual
-  const parseToDate = (ddmm: string) => {
-    const [day, month] = ddmm.split('/').map(Number);
-    return new Date(currentDate.getFullYear(), month - 1, day);
+  // Cargar tareas desde JSON
+  useEffect(() => {
+    fetch('/src/data/tasks.json')
+      .then(res => res.json())
+      .then((data: Task[]) => setTasks(data));
+  }, []);
+
+  // Función para convertir 'DD/MM/YYYY' a Date
+  const parseToDate = (ddmmYYYY: string) => {
+    const [day, month, year] = ddmmYYYY.split('/').map(Number);
+    return new Date(year, month - 1, day);
   };
-
-  // Filtrar tareas según showCompleted
-  const filteredTasks = showCompleted ? tasks.filter(task => !task.completed) : tasks;
 
   // Leer parámetros de URL y establecer fecha inicial
   useEffect(() => {
@@ -140,62 +150,87 @@ function DiaTareas() {
         <div className='w-full mb-10'>
           <div className='w-full text-blue-900 text-3xl font-bold py-6'>Para finalizar</div>
           <div className='flex flex-col gap-y-6'>
-            {tasks.slice(0, 2).filter((task) => !showCompleted || !task.completed).map((task) => (
-              <div key={task.id} className='w-full h-48 bg-white rounded-3xl relative'>
-                <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">{task.title}</div>
-                <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">{task.details}</div>
-                <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: {task.from}<br/>HASTA: {task.to}</div>
-                <motion.div 
-                  className={`w-40 h-11 right-2 bottom-4 absolute rounded-[19px] cursor-pointer ${task.completed ? 'bg-zinc-500' : 'bg-blue-600'}`}
-                  onClick={() => toggleTaskStatus(task.id)}
-                  whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
+            {tasks
+              .filter((task) => {
+                // Solo mostrar tareas cuya fecha 'to' sea igual a la fecha seleccionada y el año coincida
+                const taskToDate = parseToDate(task.to);
+                const taskFromDate = parseToDate(task.from);
+                return (
+                  taskToDate.getDate() === currentDate.getDate() &&
+                  taskToDate.getMonth() === currentDate.getMonth() &&
+                  taskToDate.getFullYear() === currentDate.getFullYear() &&
+                  taskFromDate <= currentDate
+                );
+              })
+              .filter((task) => !showCompleted || !task.completed)
+              .map((task) => (
+                <div key={task.id} className='w-full h-48 bg-white rounded-3xl relative'>
+                  <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">{task.title}</div>
+                  <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">{task.details}</div>
+                  <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: {task.from.slice(0,5)}<br/>HASTA: {task.to.slice(0,5)}</div>
                   <motion.div 
-                    className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl"
-                    key={task.completed ? 'completed' : 'pending'}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
+                    className={`w-40 h-11 right-2 bottom-4 absolute rounded-[19px] cursor-pointer ${task.completed ? 'bg-zinc-500' : 'bg-blue-600'}`}
+                    onClick={() => toggleTaskStatus(task.id)}
+                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
+                    <motion.div 
+                      className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl"
+                      key={task.completed ? 'completed' : 'pending'}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-                <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
-              </div>
-            ))}
+                  <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+                </div>
+              ))}
           </div>
         </div>
         {/* Para ir trabajando */}
         <div className='w-full'>
           <div className='w-full text-blue-900 text-3xl font-bold py-6'>Para ir trabajando</div>
           <div className='flex flex-col gap-y-6'>
-            {tasks.slice(2).filter((task) => (!showCompleted || !task.completed) && parseToDate(task.to) > currentDate).map((task) => (
-              <div key={task.id} className='w-full h-48 bg-white rounded-3xl relative'>
-                <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">{task.title}</div>
-                <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">{task.details}</div>
-                <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: {task.from}<br/>HASTA: {task.to}</div>
-                <motion.div 
-                  className={`w-40 h-11 right-2 bottom-4 absolute rounded-[19px] cursor-pointer ${task.completed ? 'bg-zinc-500' : 'bg-blue-600'}`}
-                  onClick={() => toggleTaskStatus(task.id)}
-                  whileTap={{ scale: 0.95 }}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
+            {tasks
+              .filter((task) => {
+                // Solo mostrar tareas cuyo año coincida con el año seleccionado y la fecha 'to' sea posterior a la fecha seleccionada
+                const taskToDate = parseToDate(task.to);
+                const taskFromDate = parseToDate(task.from);
+                return (
+                  taskToDate.getFullYear() === currentDate.getFullYear() &&
+                  taskToDate > currentDate &&
+                  taskFromDate <= currentDate
+                );
+              })
+              .filter((task) => (!showCompleted || !task.completed))
+              .map((task) => (
+                <div key={task.id} className='w-full h-48 bg-white rounded-3xl relative'>
+                  <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">{task.title}</div>
+                  <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">{task.details}</div>
+                  <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: {task.from.slice(0,5)}<br/>HASTA: {task.to.slice(0,5)}</div>
                   <motion.div 
-                    className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl"
-                    key={task.completed ? 'completed' : 'pending'}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
+                    className={`w-40 h-11 right-2 bottom-4 absolute rounded-[19px] cursor-pointer ${task.completed ? 'bg-zinc-500' : 'bg-blue-600'}`}
+                    onClick={() => toggleTaskStatus(task.id)}
+                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
+                    <motion.div 
+                      className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl"
+                      key={task.completed ? 'completed' : 'pending'}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-                <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
-              </div>
-            ))}
+                  <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+                </div>
+              ))}
           </div>
         </div>
       </div>
