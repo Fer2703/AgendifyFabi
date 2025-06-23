@@ -208,6 +208,7 @@ function Layout({ children }: { children: (args: { setShowModal: React.Dispatch<
   const [showModal, setShowModal] = React.useState(false);
   const [selectedTaskId, setSelectedTaskId] = React.useState<number | null>(null);
   const [refreshKey, setRefreshKey] = React.useState(0);
+  const isIphoneSE = useIsIphoneSE();
 
   const handleShowModal = (id: number) => {
     setSelectedTaskId(id);
@@ -228,7 +229,7 @@ function Layout({ children }: { children: (args: { setShowModal: React.Dispatch<
     <div style={{ width: '100vw', height: '100vh', background: '#97CDFF', position: 'relative', overflow: 'hidden' }}>
       {showModal && (
         <div className='w-full h-full fixed top-0 left-0 bg-blue-900/80 z-50'>
-          <div className="w-[86%] h-[21%] transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 absolute bg-white rounded-3xl">
+          <div className={`${isIphoneSE ? 'w-[95%] h-[28%]' : 'w-[86%] h-[21%]'} transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 absolute bg-white rounded-3xl`}>
             <div className="w-full h-10 leading-none left-0 top-[17%] absolute text-center justify-start text-blue-900 text-3xl font-bold">¿Seguro que quieres eliminar esta tarea?</div>
             <motion.div
                className='w-[42%] h-[41%] left-5 bottom-4 absolute bg-blue-600 rounded-[19px] flex items-center justify-center cursor-pointer'
