@@ -87,6 +87,53 @@ function DiaTareas() {
           whileHover={{ scale: 1.1 }}
         />
       </div>
+
+      {/* TAREAS */}
+      <div className='w-[86%] h-155 transform left-1/2 -translate-x-1/2 top-57 absolute overflow-y-auto'>
+        {/* Para ir trabajando */}
+        <div className='w-full h-96 left-0 top-0 absolute'>
+          <div className='w-full h-10 left-0 top-0 absolute justify-start text-blue-900 text-3xl font-bold'>Para finalizar</div>
+          
+          {/* Tarea 1*/}
+          <div className='w-full h-48 left-0 top-9 absolute bg-white rounded-3xl'>
+            <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">Tarea de ejemplo</div>
+            <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">Detalles de ejemplo Detalles de ejemplo</div>
+            <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: 25/06<br/>HASTA: 01/07</div>
+            <div className='w-40 h-11 right-2 bottom-4 absolute bg-zinc-500 rounded-[19px]'>
+              <div className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl">(FINALIZADO)</div>
+            </div>
+            <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+          </div>
+
+          {/* Tarea 2*/}
+          <div className='w-full h-48 left-0 top-61 absolute bg-white rounded-3xl'>
+            <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">Tarea de ejemplo</div>
+            <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">Detalles de ejemplo Detalles de ejemplo</div>
+            <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: 25/06<br/>HASTA: 01/07</div>
+            <div className='w-40 h-11 right-2 bottom-4 absolute bg-blue-600 rounded-[19px]'>
+              <div className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl">FINALIZAR</div>
+            </div>
+            <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+          </div>
+
+        </div>
+        <div className='w-full h-56 left-0 top-115 absolute'>
+          <div className='w-full h-10 left-0 top-0 absolute justify-start text-blue-900 text-3xl font-bold'>Para ir trabajando</div>
+        
+          {/* Tarea 3*/}
+          <div className='w-full h-48 left-0 top-9 absolute bg-white rounded-3xl'>
+            <div className="w-60 h-10 left-5 top-4 absolute justify-start text-blue-900 text-3xl font-bold">Tarea de ejemplo</div>
+            <div className="w-60 h-20 left-5 top-14 leading-none absolute justify-center text-zinc-500 text-2xl font-bold">Detalles de ejemplo Detalles de ejemplo</div>
+            <div className="w-40 h-11 left-5 bottom-4 leading-none absolute justify-center text-blue-900 text-2xl font-bold">DESDE: 25/06<br/>HASTA: 01/07</div>
+            <div className='w-40 h-11 right-2 bottom-4 absolute bg-blue-600 rounded-[19px]'>
+              <div className="w-40 h-11 left-0 top-2 absolute text-center justify-center text-white text-2xl">FINALIZAR</div>
+            </div>
+            <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+          </div>
+        </div>
+      </div>
+
+      
       
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
