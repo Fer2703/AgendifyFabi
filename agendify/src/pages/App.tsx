@@ -108,7 +108,7 @@ function App() {
         <div className="w-60 h-20 left-36 top-15 absolute justify-center text-zinc-500 text-3xl font-bold leading-none">
           {tareasHoy.length > 0 ? `Ver ${tareasHoy.length} tareas` : 'No hay tareas pendientes'}
         </div>
-        <img className="w-48 h-48 -left-7 -top-7 absolute" src="/src/assets/bombillo.svg" />
+        <img className="w-48 h-48 -left-7 -top-7 absolute" src="/bombillo.svg" />
       </motion.div>
 
       {/* Fecha */}
@@ -134,7 +134,7 @@ function App() {
           {monthNames[currentDate.getMonth()]}
         </motion.div>
         <motion.img 
-          src="/src/assets/flecha.svg" 
+          src="/flecha.svg" 
           alt='flecha izquierda' 
           className="w-14 h-14 left-0 top-3 absolute rotate-180 cursor-pointer" 
           onClick={handlePreviousMonth}
@@ -142,7 +142,7 @@ function App() {
           whileHover={{ scale: 1.1 }}
         />
         <motion.img 
-          src="/src/assets/flecha.svg" 
+          src="/flecha.svg" 
           alt='flecha derecha' 
           className="w-14 h-14 left-68 top-3 absolute cursor-pointer" 
           onClick={handleNextMonth}
@@ -202,7 +202,7 @@ function App() {
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
         <motion.img
-          src="/src/assets/agregar.svg"
+          src="/agregar.svg"
           alt="agregar tarea"
           className="w-24 h-24 left-0 top-0 absolute cursor-pointer"
           whileTap={{ scale: 1.25, rotate: 15 }}

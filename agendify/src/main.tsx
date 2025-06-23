@@ -24,7 +24,7 @@ function Header() {
     <>
       <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0 z-30">
         <motion.img 
-          src="/src/assets/menu.svg" 
+          src="/menu.svg" 
           alt="Menu" 
           className="w-12 h-12 left-2 relative cursor-pointer" 
           onClick={handleMenuClick}
@@ -47,7 +47,7 @@ function Header() {
             transition={{ duration: 0.3 }}
           >
             <motion.img
-              src="/src/assets/flecha.svg"
+              src="/flecha.svg"
               alt="Retorno"
               className="w-12 h-12 left-2 top-1 relative invert brightness-0 rotate-180 cursor-pointer"
               onClick={handleCloseAbout}
@@ -113,7 +113,7 @@ function AgregarHeader() {
       {/* Barra superior con botón de retroceso */}
       <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0 pointer-events-auto">
         <motion.img
-          src="/src/assets/flecha.svg"
+          src="/flecha.svg"
           alt="Retorno"
           className="w-12 h-12 left-2 relative invert brightness-0 rotate-180 cursor-pointer"
           whileTap={{ scale: 1.25, rotate: -15 }}
@@ -182,7 +182,7 @@ function DiaTareasHeader() {
       {/* Barra superior con botón de retroceso */}
       <div className="w-full h-14 bg-blue-700 flex items-center px-4 fixed top-0">
         <motion.img
-          src="/src/assets/flecha.svg"
+          src="/flecha.svg"
           alt="Retorno"
           className="w-12 h-12 left-2 relative invert brightness-0 rotate-180 cursor-pointer"
           whileTap={{ scale: 1.25, rotate: -15 }}
@@ -313,7 +313,7 @@ function LoadingScreen() {
       style={{ background: "linear-gradient(1deg, #97CDFF -22.66%, #2258E2 41.7%)" }}
     >
       <motion.img
-        src="/src/assets/logo.svg"
+        src="/logo.svg"
         alt="Agendify Logo"
         className="w-80 h-56 transform left-1/2 -translate-x-1/2 top-[33%] absolute"
         initial={{ scale: 0.8, opacity: 0.8 }}

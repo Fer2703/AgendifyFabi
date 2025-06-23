@@ -152,7 +152,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
           {formatDate(currentDate)}
         </motion.div>
         <motion.img 
-          src="/src/assets/flecha.svg" 
+          src="/flecha.svg" 
           alt="flecha izq" 
           className='w-14 h-14 left-0 top-4 rotate-180 absolute cursor-pointer'
           onClick={handlePreviousDay}
@@ -160,7 +160,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
           whileHover={{ scale: 1.1 }}
         />
         <motion.img 
-          src="/src/assets/flecha.svg" 
+          src="/flecha.svg" 
           alt="flecha der" 
           className='w-14 h-14 right-0 top-4 absolute cursor-pointer'
           onClick={handleNextDay}
@@ -218,7 +218,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
                       </motion.div>
                     </motion.div>
                     <motion.img 
-                      src="/src/assets/X.svg" 
+                      src="/X.svg" 
                       alt="X" 
                       className='w-9 h-9 right-5 top-4 absolute cursor-pointer' 
                       onClick={() => onShowModal && onShowModal(task.id)}
@@ -258,7 +258,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
                       </motion.div>
                     </motion.div>
                     <motion.img 
-                      src="/src/assets/X.svg" 
+                      src="/X.svg" 
                       alt="X" 
                       className='w-9 h-9 right-5 top-4 absolute cursor-pointer' 
                       onClick={() => onShowModal && onShowModal(task.id)}
@@ -276,7 +276,7 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
         <motion.img
-          src="/src/assets/agregar.svg"
+          src="/agregar.svg"
           alt="agregar tarea"
           className="w-24 h-24 left-0 top-0 absolute cursor-pointer"
           whileTap={{ scale: 1.25, rotate: 15 }}
