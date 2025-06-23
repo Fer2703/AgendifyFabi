@@ -69,7 +69,7 @@ function Agregar() {
   return (
     <div style={{
       width: '100%',
-      height: isIphoneSE ? '92%' : '100%',
+      height: isIphoneSE ? '90%' : '100%',
       margin: 0,
       padding: 0,
       display: 'flex',
