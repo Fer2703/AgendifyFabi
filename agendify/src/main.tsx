@@ -332,7 +332,15 @@ function LoadingScreen() {
 function MainApp() {
   const [loading, setLoading] = useState(true);
 
+  // Cargar tasks.json al inicio si no existe en localStorage
   useEffect(() => {
+    if (!localStorage.getItem('tasks')) {
+      fetch('/data/tasks.json')
+        .then(res => res.json())
+        .then((data) => {
+          localStorage.setItem('tasks', JSON.stringify(data));
+        });
+    }
     const timer = setTimeout(() => setLoading(false), 1800);
     return () => clearTimeout(timer);
   }, []);
