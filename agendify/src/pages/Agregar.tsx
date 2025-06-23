@@ -1,22 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion';
+import useIsIphoneSE from '../hooks/useIsIphoneSE';
 
 function Agregar() {
   const [titulo, setTitulo] = useState('');
   const [detalles, setDetalles] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  const [showBordeRojo, setShowBordeRojo] = useState(false);
+  const [intentoGuardar, setIntentoGuardar] = useState(false);
   const navigate = useNavigate();
   const controls = useAnimation();
-  const bordeTimeout = useRef<any>(null);
+  const isIphoneSE = useIsIphoneSE();
 
   const handleFechaInicioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nuevaFechaInicio = e.target.value;
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    
+    // Solo permitir fechas de hoy en adelante
     if (nuevaFechaInicio >= today) {
       setFechaInicio(nuevaFechaInicio);
+      
+      // Si la fecha de fin es anterior a la nueva fecha de inicio, actualizarla
       if (fechaFin && nuevaFechaInicio > fechaFin) {
         setFechaFin(nuevaFechaInicio);
       }
@@ -25,6 +30,7 @@ function Agregar() {
 
   const handleFechaFinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nuevaFechaFin = e.target.value;
+    // Solo permitir fechas posteriores a la fecha de inicio
     if (!fechaInicio || nuevaFechaFin >= fechaInicio) {
       setFechaFin(nuevaFechaFin);
     }
@@ -36,23 +42,12 @@ function Agregar() {
     return `${dd}/${mm}/${yyyy}`;
   };
 
-  // Obtener la fecha local de hoy en formato YYYY-MM-DD
-  const getLocalToday = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  };
-
-  const camposCompletos = titulo && detalles && fechaInicio && fechaFin;
+  const camposCompletos = titulo && fechaInicio && fechaFin;
 
   const handleGuardar = () => {
+    setIntentoGuardar(true);
     if (!camposCompletos) {
-      setShowBordeRojo(true);
-      controls.start({ x: [0, -10, 10, -10, 10, 0], transition: { duration: 0.25 } });
-      if (bordeTimeout.current) clearTimeout(bordeTimeout.current);
-      bordeTimeout.current = setTimeout(() => setShowBordeRojo(false), 300);
+      controls.start({ x: [0, -10, 10, -10, 10, 0], transition: { duration: 0.3 } });
       return;
     }
     const nuevaTarea = {
@@ -66,19 +61,15 @@ function Agregar() {
     const tareasGuardadas = JSON.parse(localStorage.getItem('tasks') || '[]');
     tareasGuardadas.push(nuevaTarea);
     localStorage.setItem('tasks', JSON.stringify(tareasGuardadas));
+    // Redirigir al día de inicio
     const [yyyy, mm, dd] = fechaInicio.split('-');
     navigate(`/diatareas?day=${parseInt(dd, 10)}&month=${parseInt(mm, 10) - 1}&year=${yyyy}`);
   };
 
-  // Clases para borde rojo animado por color
-  const bordeBase = 'border-4';
-  const bordeVisible = 'border-red-500/60 transition-none';
-  const bordeOculto = 'border-transparent transition-colors duration-300';
-
   return (
     <div style={{
       width: '100%',
-      height: '100%',
+      height: isIphoneSE ? '92%' : '100%',
       margin: 0,
       padding: 0,
       display: 'flex',
@@ -90,14 +81,14 @@ function Agregar() {
         {/* Nombre Tarea */}
         <div className="w-[95%] h-24 left-1/2 transform -translate-x-1/2 top-34 absolute">
             <div className="w-60 h-10 left-2 top-0 absolute justify-start text-blue-900 text-3xl font-bold">Título de la tarea</div>
-            <div className={`w-full h-16 top-10 absolute bg-white rounded-3xl ${bordeBase} ${(showBordeRojo && !titulo) ? bordeVisible : bordeOculto}`}>
+            <div className="w-full h-16 top-10 absolute bg-white rounded-3xl">
                 <input
                     type="text"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                     placeholder="Tarea sin título"
                     maxLength={20}
-                    className="w-full h-full !p-5 text-zinc-500 text-3xl font-bold bg-transparent border-none outline-none"
+                    className={`w-full h-full !p-5 text-zinc-500 text-3xl font-bold bg-transparent border-none outline-none ${intentoGuardar && !titulo ? 'border-2 border-red-500' : ''}`}
                 />
             </div>
         </div>
@@ -105,7 +96,7 @@ function Agregar() {
         {/* Detalles */}
         <div className="w-[95%] h-60 left-1/2 transform -translate-x-1/2 top-63 absolute">
             <div className="w-60 h-10 left-2 top-0 absolute justify-start text-blue-900 text-3xl font-bold">Detalles</div>
-            <div className={`w-full h-52 left-0 top-10 absolute bg-white rounded-3xl ${bordeBase} ${(showBordeRojo && !detalles) ? bordeVisible : bordeOculto}`}>
+            <div className="w-full h-52 left-0 top-10 absolute bg-white rounded-3xl">
                 <textarea
                     value={detalles}
                     onChange={(e) => setDetalles(e.target.value)}
@@ -122,26 +113,28 @@ function Agregar() {
         {/* Tiempo de Realizacion */}
         <div className="w-[95%] h-44 left-1/2 transform -translate-x-1/2 top-131 absolute">
             <div className="w-96 h-11 left-2 top-0 absolute justify-start text-blue-900 text-3xl font-bold">Tiempo de realización</div>
+            
             {/* Desde */}
-            <div className={`w-[47%] h-32 left-2 top-12 absolute bg-white rounded-3xl ${bordeBase} ${(showBordeRojo && !fechaInicio) ? bordeVisible : bordeOculto}`}>
+            <div className="w-[47%] h-32 left-2 top-12 absolute bg-white rounded-3xl">
                 <div className="w-40 h-11 left-1/2 transform -translate-x-1/2 top-4 absolute text-center justify-start text-blue-900 text-3xl font-bold">Desde:</div>
                 <input
                     type="date"
                     value={fechaInicio}
                     onChange={handleFechaInicioChange}
-                    min={getLocalToday()}
-                    className="w-40 h-24 left-1/2 transform -translate-x-1/2 top-8 absolute text-center text-zinc-500 text-2xl font-bold bg-transparent border-none outline-none"
+                    min={new Date().toISOString().split('T')[0]}
+                    className={`w-40 h-24 left-1/2 transform -translate-x-1/2 top-8 absolute text-center text-zinc-500 text-2xl font-bold bg-transparent border-none outline-none ${intentoGuardar && !fechaInicio ? 'border-2 border-red-500' : ''}`}
                 />
             </div>
+
             {/* Hasta */}
-            <div className={`w-[47%] h-32 right-2 top-12 absolute bg-white rounded-3xl ${bordeBase} ${(showBordeRojo && !fechaFin) ? bordeVisible : bordeOculto}`}>
+            <div className="w-[47%] h-32 right-2 top-12 absolute bg-white rounded-3xl">
                 <div className="w-40 h-11 left-1/2 transform -translate-x-1/2 top-4 absolute text-center justify-start text-blue-900 text-3xl font-bold">Hasta:</div>
                 <input
                     type="date"
                     value={fechaFin}
                     onChange={handleFechaFinChange}
                     min={fechaInicio}
-                    className="w-40 h-24 left-1/2 transform -translate-x-1/2 top-8 absolute text-center text-zinc-500 text-2xl font-bold bg-transparent border-none outline-none"
+                    className={`w-40 h-24 left-1/2 transform -translate-x-1/2 top-8 absolute text-center text-zinc-500 text-2xl font-bold bg-transparent border-none outline-none ${intentoGuardar && !fechaFin ? 'border-2 border-red-500' : ''}`}
                 />
             </div>
         </div>

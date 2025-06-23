@@ -7,19 +7,7 @@ import App from './pages/App.tsx'
 import Agregar from './pages/Agregar.tsx'
 import DiaTareas from './pages/DiaTareas.tsx'
 import React, { useState, useEffect } from 'react'
-
-// Detecta si el dispositivo es un iPhone SE (ancho <= 375px y alto <= 667px)
-function useIsIphoneSE() {
-  const [isIphoneSE, setIsIphoneSE] = React.useState(() => {
-    return window.innerWidth <= 375 && window.innerHeight <= 667;
-  });
-  React.useEffect(() => {
-    const onResize = () => setIsIphoneSE(window.innerWidth <= 375 && window.innerHeight <= 667);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-  return isIphoneSE;
-}
+import useIsIphoneSE from './hooks/useIsIphoneSE'
 
 // Header
 function Header() {
