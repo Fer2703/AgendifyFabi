@@ -96,7 +96,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="select-none">
       {/* Tarjeta de anuncios */}
       <motion.div
         className="w-[93%] h-36 absolute left-1/2 transform -translate-x-1/2 top-20 bg-white rounded-3xl overflow-hidden cursor-pointer"
