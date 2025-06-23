@@ -13,7 +13,9 @@ interface Task {
   completed: boolean;
 }
 
-function DiaTareas() {
+export type DiaTareasProps = { onShowModal?: (id: number) => void; onDeleteTask?: (id: number) => void };
+
+function DiaTareas({ onShowModal }: DiaTareasProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [isFading, setIsFading] = useState(false);
@@ -215,7 +217,14 @@ function DiaTareas() {
                         {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
                       </motion.div>
                     </motion.div>
-                    <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+                    <motion.img 
+                      src="/src/assets/X.svg" 
+                      alt="X" 
+                      className='w-9 h-9 right-5 top-4 absolute cursor-pointer' 
+                      onClick={() => onShowModal && onShowModal(task.id)}
+                      whileTap={{ scale: 1.25, rotate: 15 }}
+                      whileHover={{ scale: 1.1 }}
+                    />
                   </div>
                 ))}
               </div>
@@ -248,7 +257,14 @@ function DiaTareas() {
                         {task.completed ? '(FINALIZADO)' : 'FINALIZAR'}
                       </motion.div>
                     </motion.div>
-                    <img src="/src/assets/X.svg" alt="X" className='w-9 h-9 right-5 top-4 absolute' />
+                    <motion.img 
+                      src="/src/assets/X.svg" 
+                      alt="X" 
+                      className='w-9 h-9 right-5 top-4 absolute cursor-pointer' 
+                      onClick={() => onShowModal && onShowModal(task.id)}
+                      whileTap={{ scale: 1.25, rotate: 15 }}
+                      whileHover={{ scale: 1.1 }}
+                    />
                   </div>
                 ))}
               </div>
@@ -257,8 +273,6 @@ function DiaTareas() {
         </div>
       </div>
 
-      
-      
       {/* Agregar Tarea */}
       <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
         <motion.img

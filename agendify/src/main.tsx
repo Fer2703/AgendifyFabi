@@ -197,15 +197,59 @@ function DiaTareasHeader() {
 }
 
 // Layout principal de la aplicación
-function Layout({ children }: { children: React.ReactNode }) {
+function Layout({ children }: { children: (args: { setShowModal: React.Dispatch<React.SetStateAction<boolean>>, refreshKey: number, handleDeleteTask: (id: number) => void }) => React.ReactNode }) {
   const location = useLocation();
   const isAgregar = location.pathname === '/agregar';
   const isDiaTareas = location.pathname === '/diatareas';
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectedTaskId, setSelectedTaskId] = React.useState<number | null>(null);
+  const [refreshKey, setRefreshKey] = React.useState(0);
+
+  const handleShowModal = (id: number) => {
+    setSelectedTaskId(id);
+    setShowModal(true);
+  };
+
+  const handleDeleteTask = (id: number) => {
+    // Eliminar la tarea del localStorage
+    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    const newTasks = tasks.filter((t: any) => t.id !== id);
+    localStorage.setItem('tasks', JSON.stringify(newTasks));
+    setShowModal(false);
+    setSelectedTaskId(null);
+    setRefreshKey(k => k + 1); // Forzar refresco
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#97CDFF', position: 'relative', overflow: 'hidden' }}>
+      {showModal && (
+        <div className='w-full h-full fixed top-0 left-0 bg-blue-900/80 z-50'>
+          <div className="w-[86%] h-[21%] transform left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 absolute bg-white rounded-3xl">
+            <div className="w-full h-10 leading-none left-0 top-[17%] absolute text-center justify-start text-blue-900 text-3xl font-bold">¿Seguro que quieres eliminar esta tarea?</div>
+            <motion.div
+               className='w-[42%] h-[41%] left-5 bottom-4 absolute bg-blue-600 rounded-[19px] flex items-center justify-center cursor-pointer'
+               onClick={() => setShowModal(false)}
+               whileHover={{ scale: 1.07 }}
+               whileTap={{ scale: 0.95 }}
+               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+             >
+               <div className="text-white text-3xl font-bold">Volver</div>
+             </motion.div>
+            <motion.div
+               className='w-[42%] h-[41%] right-5 bottom-4 absolute bg-red-600 rounded-[19px] flex items-center justify-center cursor-pointer'
+               onClick={() => selectedTaskId !== null && handleDeleteTask(selectedTaskId)}
+               whileHover={{ scale: 1.07 }}
+               whileTap={{ scale: 0.95 }}
+               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+             >
+               <div className="text-white text-center text-3xl font-bold">Si, deseo eliminarla</div>
+             </motion.div>
+          </div>
+        </div>
+      )}
       {isAgregar ? <AgregarHeader /> : isDiaTareas ? <DiaTareasHeader /> : <Header />}
       <div style={{ width: '100%', height: '100%' }}>
-        {children}
+        {children({ setShowModal, refreshKey, handleDeleteTask: handleShowModal })}
       </div>
       <Footer />
     </div>
@@ -213,12 +257,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 // Sistema de rutas con animaciones
-function AnimatedRoutes() {
+function AnimatedRoutes({ onShowModal, refreshKey, handleDeleteTask }: { onShowModal: (id: number) => void, refreshKey: number, handleDeleteTask: (id: number) => void }) {
   const location = useLocation();
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        
         {/* Página principal */}
         <Route path="/" element={
           <motion.div
@@ -248,13 +291,14 @@ function AnimatedRoutes() {
         {/* Página de tareas del día */}
         <Route path="/diatareas" element={
           <motion.div
+            key={refreshKey}
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.22 }}
             style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, left: 0, zIndex: 10, background: 'transparent' }}
           >
-            <DiaTareas />
+            <DiaTareas onShowModal={onShowModal} onDeleteTask={handleDeleteTask} />
           </motion.div>
         } />
       </Routes>
@@ -294,12 +338,19 @@ function MainApp() {
     <StrictMode>
       <BrowserRouter>
         <Layout>
-          <AnimatedRoutes />
+          {({ setShowModal, refreshKey, handleDeleteTask }) => (
+            <AnimatedRoutes onShowModal={handleDeleteTask} refreshKey={refreshKey} handleDeleteTask={handleDeleteTask} />
+          )}
         </Layout>
       </BrowserRouter>
     </StrictMode>
   );
 }
+
+// Asegúrate de que AnimatedRoutes siempre reciba el prop onShowModal
+AnimatedRoutes.defaultProps = {
+  onShowModal: () => { throw new Error('onShowModal es requerido en AnimatedRoutes'); }
+};
 
 // Renderizado principal
 createRoot(document.getElementById('root')!).render(
