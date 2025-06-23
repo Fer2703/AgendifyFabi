@@ -69,7 +69,7 @@ function Header() {
               }}
             >
               <div className='w-full h-10 top-6 text-center font-bold text-4xl text-blue-900 absolute'>Sobre nosotros</div>
-              <div className={`w-[87%] left-1/2 transform -translate-x-1/2 leading-none top-18 text-center font-bold ${isIphoneSE ? 'text-[1.15rem]' : 'text-2xl'} text-blue-900 absolute`}>
+              <div className={`w-[87%] left-1/2 transform -translate-x-1/2 leading-none top-18 text-center font-bold ${isIphoneSE ? 'text-[1.1rem]' : 'text-2xl'} text-blue-900 absolute`}>
                 Este proyecto surge como una iniciativa escolar para mejorar la planificación diaria y la gestión de tiempo. Diseñamos esta página con el objetivo de facilitar el acceso a información estructurada de manera visual y práctica. <br/><br/>Creado por los estudiantes de la U.E.C.P Internacional "Río Caura" Escobar Bárbara, Henández Miguel, Molina Camila y Pérez Fabiana, esperamos que este sistema ayude a organizar tareas de manera eficiente y adaptada a las necesidades del usuario
               </div>
             </motion.div>
