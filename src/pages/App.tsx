@@ -204,7 +204,7 @@ function App() {
       </div>
 
       {/* Agregar Tarea */}
-      <div className="w-24 h-24 right-4 bottom-15 absolute z-10">
+      <div className="w-24 h-24 right-4 bottom-4 absolute z-10">
         <motion.img
           src="/agregar.svg"
           alt="agregar tarea"
