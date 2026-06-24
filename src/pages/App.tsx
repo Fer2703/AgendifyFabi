@@ -155,16 +155,17 @@ function App() {
       <div className="w-44 h-12 left-5 top-91 absolute flex items-center cursor-pointer" onClick={() => setShowCompleted(v => !v)}>
         <div className="flex items-center">
           <div className="mr-2">
-            <PalomaIcon color={showCompleted ? '#71717a' : '#2258E2'} size={48} />
+            <PalomaIcon color={showCompleted ? '#71717a' : '#43A047'} size={48} />
           </div>
           <span className={`text-2xl leading-none left-14 font-bold select-none absolute ${showCompleted ? 'text-zinc-500' : 'text-green-600'}`}>Ver tareas finalizadas</span>
         </div>
       </div>
 
       {/* Dias del Mes */}
-      <div className="w-[93%] h-[calc(100vh-500px)] left-1/2 transform -translate-x-1/2 top-108 absolute overflow-y-auto">
-        {daysArray.map((day, index) => {
-          // Filtrar tareas para este día
+      <div className='w-full h-[calc(100vh-27rem)] top-108 absolute overflow-y-auto scrollbar-hide'>
+        <div className="w-[93%] left-1/2 transform -translate-x-1/2 absolute">
+          {daysArray.map((day, index) => {
+            // Filtrar tareas para este día
           let tareasDelDia = tasks.filter(task => {
             const fromDate = parseToDate(task.from);
             const toDate = parseToDate(task.to);
@@ -182,21 +183,24 @@ function App() {
                 whileHover={{ scale: 1.02 }}
                 onClick={() => navigate(`/diatareas?day=${day}&month=${currentDate.getMonth()}&year=${currentDate.getFullYear()}`)}
               >
-                <div className={`w-20 h-14 left-1 absolute text-center justify-start ${tareasDelDia.length > 0 ? 'text-white' : 'text-green-900'} text-6xl font-bold`}>
-                  {day.toString().padStart(2, '0')}
-                </div>
-                <div className={`w-64 h-20 left-23 absolute flex items-center ${tareasDelDia.length > 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
-                  {tareasDelDia.length > 0
-                    ? `Ver ${tareasDelDia.length} tareas`
-                    : 'No hay tareas pendientes'}
-                </div>
-              </motion.div>
+                  <div className={`w-20 h-14 ml-4 text-center ${tareasDelDia.length > 0 ? 'text-white' : 'text-green-900'} text-6xl font-bold`}>
+                    {day.toString().padStart(2, '0')}
+                  </div>
+                  <div className={`ml-8 ${tareasDelDia.length > 0 ? 'text-white' : 'text-zinc-500'} text-3xl font-bold`}>
+                    {tareasDelDia.length === 1
+                      ? 'Ver 1 tarea'
+                      : tareasDelDia.length > 1
+                        ? `Ver ${tareasDelDia.length} tareas`
+                        : 'No hay tareas pendientes'}
+                  </div>
+                </motion.div>
               {index < daysArray.length - 1 && (
                 <div className="h-3"></div>
               )}
             </div>
           )
         })}
+        </div>
       </div>
 
       {/* Agregar Tarea */}

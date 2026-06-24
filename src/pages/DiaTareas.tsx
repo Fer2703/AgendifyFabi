@@ -2,8 +2,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import PalomaIcon from '../assets/PalomaIcon'
-import useIsIphoneSE from '../hooks/useIsIphoneSE'
-
 // Definir el tipo de tarea
 interface Task {
   id: number;
@@ -23,7 +21,6 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [slideDirection, setSlideDirection] = useState(0);
   const [showCompleted, setShowCompleted] = useState(false);
-  const isIphoneSE = useIsIphoneSE();
   
   // Estado para manejar el estado de las tareas
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -183,14 +180,14 @@ function DiaTareas({ onShowModal }: DiaTareasProps) {
             transition={{ duration: 0.3 }}
             className='mr-2'
           >
-            <PalomaIcon color={showCompleted ? '#71717a' : '#2258E2'} size={48} />
+            <PalomaIcon color={showCompleted ? '#71717a' : '#43A047'} size={48} />
           </motion.div>
           <span className='text-2xl leading-none left-14 font-bold select-none absolute'>Ver tareas finalizadas</span>
         </motion.div>
       </div>
 
       {/* TAREAS */}
-      <div className={`w-[86%] ${isIphoneSE ? 'h-85' : 'h-155'} transform left-1/2 -translate-x-1/2 top-57 absolute overflow-y-auto`}>
+      <div className={`w-[92%] h-[calc(100vh-14.25rem)] transform left-1/2 -translate-x-1/2 top-57 absolute overflow-y-auto px-2`}>
         <div className="flex flex-col gap-y-6">
           {/* Para finalizar */}
           {tareasParaFinalizar.length > 0 && (

@@ -6,7 +6,7 @@ interface PalomaIconProps {
   size?: number;
 }
 
-const PalomaIcon: React.FC<PalomaIconProps> = ({ color = '#2258E2', size = 44 }) => (
+const PalomaIcon: React.FC<PalomaIconProps> = ({ color = '#43A047', size = 44 }) => (
   <motion.svg
     width={size}
     height={size}

@@ -2,7 +2,6 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Header from './Header'
-import Footer from './Footer'
 import AgregarHeader from './AgregarHeader'
 import DiaTareasHeader from './DiaTareasHeader'
 import useIsIphoneSE from '../hooks/useIsIphoneSE'
@@ -69,7 +68,6 @@ export default function Layout({ children }: LayoutProps) {
       <div style={{ width: '100%', height: '100%' }}>
         {children({ setShowModal, refreshKey, handleDeleteTask: handleShowModal })}
       </div>
-      <Footer />
     </div>
   );
 }
